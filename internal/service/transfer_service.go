@@ -43,6 +43,9 @@ func (s *TransferService) Transfer(sampleID string, input model.TransferInput) (
 	}
 	now := s.clock.Now()
 	guard := policy.BuildTransferGuard(sample)
+	if err := policy.ValidateTransferGuard(sample, guard); err != nil {
+		return model.Transfer{}, model.Sample{}, err
+	}
 	transfer := model.Transfer{
 		ID:        s.ids.Next("transfer"),
 		SampleID:  sample.ID,

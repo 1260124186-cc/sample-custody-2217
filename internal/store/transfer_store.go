@@ -28,5 +28,16 @@ func (s *Store) UpdateSampleAndAppendTransferGuarded(sample model.Sample, transf
 	if !guard.Valid() {
 		return model.NewError(model.ErrorInvalid, "transfer guard is incomplete")
 	}
-	return s.UpdateSampleAndAppendTransfer(sample, transfer)
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	current, exists := s.samples[guard.SampleID]
+	if !exists {
+		return model.NewError(model.ErrorNotFound, "sample %q was not found", guard.SampleID)
+	}
+	if !guard.Matches(current) || current.ID != sample.ID {
+		return model.NewError(model.ErrorConflict, "sample %q custody changed before transfer", guard.SampleID)
+	}
+	s.samples[sample.ID] = sample.Clone()
+	s.transfers[sample.ID] = append(s.transfers[sample.ID], transfer.Clone())
+	return nil
 }

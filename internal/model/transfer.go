@@ -33,3 +33,7 @@ type TransferGuard struct {
 func (g TransferGuard) Valid() bool {
 	return g.SampleID != "" && g.ExpectedHolder != ""
 }
+
+func (g TransferGuard) Matches(sample Sample) bool {
+	return g.Valid() && g.SampleID == sample.ID && g.ExpectedHolder == sample.CurrentHolder
+}
