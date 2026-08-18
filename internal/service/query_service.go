@@ -44,9 +44,7 @@ func (s *QueryService) Manifest(batchID string) (string, error) {
 }
 
 func (s *QueryService) Summary() model.ServiceSummary {
-	summary := s.store.Summary()
-	summary.SealedCount = 0
-	return summary
+	return s.store.Summary()
 }
 
 func (s *QueryService) Search(query string, limit int) []model.SearchResult {

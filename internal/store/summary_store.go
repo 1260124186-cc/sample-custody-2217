@@ -33,7 +33,7 @@ func (s *Store) Summary() model.ServiceSummary {
 		}
 		origin.SampleCount++
 		if sample.Status == model.SampleSealed {
-			origin.OpenCount++
+			origin.SealedCount++
 		} else {
 			origin.OpenCount++
 		}

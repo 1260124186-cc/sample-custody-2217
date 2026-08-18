@@ -32,7 +32,7 @@ func SampleCSV(samples []model.Sample) string {
 			sample.Origin,
 			strconv.FormatFloat(sample.Quantity, 'f', -1, 64),
 			sample.Unit,
-			sample.Status.Label(),
+			string(sample.Status),
 			sample.CurrentHolder,
 			sample.CreatedAt.Format("2006-01-02T15:04:05Z"),
 			sample.UpdatedAt.Format("2006-01-02T15:04:05Z"),

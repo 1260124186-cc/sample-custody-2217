@@ -11,7 +11,7 @@ func (s SampleStatus) Label() string {
 	case SampleInReview:
 		return "assigned to an inspection batch"
 	case SampleSealed:
-		return "registered and awaiting review"
+		return "sealed after inspection"
 	default:
 		return "unknown lifecycle state"
 	}
