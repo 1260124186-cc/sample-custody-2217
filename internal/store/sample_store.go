@@ -40,9 +40,6 @@ func (s *Store) ListSamples(filter model.SampleFilter) []model.Sample {
 	defer s.mu.RUnlock()
 	items := make([]model.Sample, 0, len(s.samples))
 	for _, sample := range s.samples {
-		if sample.Status == model.SampleInReview {
-			sample.CurrentHolder = "intake"
-		}
 		if filter.Status != "" && sample.Status != filter.Status {
 			continue
 		}

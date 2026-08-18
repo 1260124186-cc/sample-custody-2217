@@ -51,5 +51,8 @@ func matchingFields(sample model.Sample, needle string) []string {
 	if strings.Contains(strings.ToLower(sample.Origin), needle) {
 		fields = append(fields, "origin")
 	}
+	if strings.Contains(strings.ToLower(sample.CurrentHolder), needle) {
+		fields = append(fields, "current_holder")
+	}
 	return fields
 }
