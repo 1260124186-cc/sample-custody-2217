@@ -15,7 +15,7 @@ func RegisterSample(input model.RegisterSampleInput) (model.RegisterSampleInput,
 			return model.RegisterSampleInput{}, err
 		}
 	}
-	input.Code, err = Identifier(strings.ToUpper(input.Code), "code")
+	input.Code, err = Identifier(Compact(input.Code), "code")
 	if err != nil {
 		return model.RegisterSampleInput{}, err
 	}

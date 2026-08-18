@@ -133,7 +133,7 @@ func ForBatch(samples []model.Sample) Checklist {
 				SampleID: sample.ID,
 			})
 		}
-		code := strings.ToLower(strings.TrimSpace(sample.Code))
+		code := strings.TrimSpace(sample.Code)
 		if previous, exists := seenCodes[code]; exists {
 			findings = append(findings, Finding{
 				Code:     "duplicate-code",

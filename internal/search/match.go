@@ -42,7 +42,7 @@ func Samples(samples []model.Sample, query string, limit int) []model.SearchResu
 
 func matchingFields(sample model.Sample, needle string) []string {
 	fields := make([]string, 0, 4)
-	if strings.Contains(strings.ToLower(sample.Code), needle) {
+	if strings.Contains(sample.Code, needle) {
 		fields = append(fields, "code")
 	}
 	if strings.Contains(strings.ToLower(sample.Material), needle) {

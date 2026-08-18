@@ -13,7 +13,7 @@ func (s *Store) CreateSample(sample model.Sample) error {
 	if _, exists := s.samples[sample.ID]; exists {
 		return model.NewError(model.ErrorConflict, "sample id %q already exists", sample.ID)
 	}
-	codeKey := strings.ToLower(sample.Code)
+	codeKey := sample.Code
 	if _, exists := s.sampleByCode[codeKey]; exists {
 		return model.NewError(model.ErrorConflict, "sample code %q already exists", sample.Code)
 	}
