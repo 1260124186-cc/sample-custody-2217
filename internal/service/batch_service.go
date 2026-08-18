@@ -1,6 +1,8 @@
 package service
 
 import (
+	"fmt"
+
 	"example.com/sample-custody/internal/audit"
 	"example.com/sample-custody/internal/clock"
 	"example.com/sample-custody/internal/ids"
@@ -51,7 +53,7 @@ func (s *BatchService) Create(input model.CreateBatchInput) (model.Batch, error)
 		CreatedAt: now,
 	}
 	if err := s.store.CreateBatch(batch); err != nil {
-		return model.Batch{}, err
+		return model.Batch{}, fmt.Errorf("create batch failed: %v", err)
 	}
 	for _, sample := range samples {
 		nextStatus := policy.TransitionForBatch(sample)
@@ -61,7 +63,7 @@ func (s *BatchService) Create(input model.CreateBatchInput) (model.Batch, error)
 		sample.Status = nextStatus
 		sample.UpdatedAt = now
 		if err := s.store.UpdateSample(sample); err != nil {
-			return model.Batch{}, err
+			return model.Batch{}, fmt.Errorf("update sample failed: %v", err)
 		}
 		s.log.Append(model.AuditEvent{
 			ID:        s.ids.Next("event"),
@@ -117,7 +119,7 @@ func (s *BatchService) Complete(id string) (model.BatchCompletion, error) {
 	batch.Status = model.BatchCompleted
 	batch.CompletedAt = &now
 	if err := s.store.CompleteBatch(batch, samples); err != nil {
-		return model.BatchCompletion{}, err
+		return model.BatchCompletion{}, fmt.Errorf("complete batch failed: %v", err)
 	}
 	for _, sample := range samples {
 		s.log.Append(model.AuditEvent{

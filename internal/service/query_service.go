@@ -1,6 +1,8 @@
 package service
 
 import (
+	"fmt"
+
 	"example.com/sample-custody/internal/audit"
 	"example.com/sample-custody/internal/export"
 	"example.com/sample-custody/internal/model"
@@ -22,7 +24,7 @@ type SampleDetail struct {
 func (s *QueryService) Detail(id string) (SampleDetail, error) {
 	sample, err := s.store.GetSample(id)
 	if err != nil {
-		return SampleDetail{}, err
+		return SampleDetail{}, fmt.Errorf("get sample detail failed: %v", err)
 	}
 	return SampleDetail{
 		Sample:    sample,

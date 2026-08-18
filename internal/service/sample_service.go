@@ -1,6 +1,8 @@
 package service
 
 import (
+	"fmt"
+
 	"example.com/sample-custody/internal/audit"
 	"example.com/sample-custody/internal/clock"
 	"example.com/sample-custody/internal/ids"
@@ -45,7 +47,7 @@ func (s *SampleService) Register(input model.RegisterSampleInput) (model.Sample,
 		UpdatedAt:     now,
 	}
 	if err := s.store.CreateSample(sample); err != nil {
-		return model.Sample{}, err
+		return model.Sample{}, fmt.Errorf("create sample failed: %v", err)
 	}
 	s.log.Append(model.AuditEvent{
 		ID:        s.ids.Next("event"),

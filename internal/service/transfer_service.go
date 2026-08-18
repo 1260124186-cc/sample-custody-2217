@@ -1,6 +1,8 @@
 package service
 
 import (
+	"fmt"
+
 	"example.com/sample-custody/internal/audit"
 	"example.com/sample-custody/internal/clock"
 	"example.com/sample-custody/internal/ids"
@@ -55,7 +57,7 @@ func (s *TransferService) Transfer(sampleID string, input model.TransferInput) (
 	sample.CurrentHolder = normalized.To
 	sample.UpdatedAt = now
 	if err := s.store.UpdateSampleAndAppendTransfer(sample, transfer); err != nil {
-		return model.Transfer{}, model.Sample{}, err
+		return model.Transfer{}, model.Sample{}, fmt.Errorf("save transfer failed: %v", err)
 	}
 	s.log.Append(model.AuditEvent{
 		ID:        s.ids.Next("event"),
