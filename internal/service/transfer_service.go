@@ -29,9 +29,6 @@ func (s *TransferService) Transfer(sampleID string, input model.TransferInput) (
 	if err != nil {
 		return model.Transfer{}, model.Sample{}, err
 	}
-	if sample.Status != model.SampleRegistered {
-		return model.Transfer{}, model.Sample{}, model.NewError(model.ErrorConflict, "sample %q is not available for handoff", sample.ID)
-	}
 	checklist := review.ForTransfer(sample, normalized.From, normalized.To)
 	if !checklist.Allowed {
 		return model.Transfer{}, model.Sample{}, model.NewError(model.ErrorConflict, "transfer review rejected: %s", review.Explain(checklist))

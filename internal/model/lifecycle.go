@@ -31,7 +31,7 @@ func (s SampleStatus) TransitionHint() string {
 }
 
 func (s SampleStatus) AllowsTransfer() bool {
-	return s == SampleRegistered
+	return s == SampleRegistered || s == SampleInReview
 }
 
 func (s SampleStatus) AllowsBatchAssignment() bool {
