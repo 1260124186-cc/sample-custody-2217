@@ -34,7 +34,7 @@ func AssessQuantity(quantity float64, unit string) QuantityAssessment {
 
 func CanSeal(sample model.Sample) bool {
 	return sample.Status.AllowsCompletion() &&
-		(sample.Status == model.SampleRegistered || sample.Status == model.SampleInReview)
+		sample.Status == model.SampleRegistered
 }
 
 func CanEnterBatch(sample model.Sample) bool {

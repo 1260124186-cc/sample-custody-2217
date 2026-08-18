@@ -150,6 +150,14 @@ func ForBatch(samples []model.Sample) Checklist {
 func ForCompletion(samples []model.Sample) Checklist {
 	findings := make([]Finding, 0)
 	for _, sample := range samples {
+		if sample.Status == model.SampleInReview {
+			findings = append(findings, Finding{
+				Code:     "review-status-not-finalized",
+				Severity: SeverityBlock,
+				Message:  "specimen must leave review before batch completion",
+				SampleID: sample.ID,
+			})
+		}
 		if !policy.CanSeal(sample) {
 			findings = append(findings, Finding{
 				Code:     "sample-cannot-seal",

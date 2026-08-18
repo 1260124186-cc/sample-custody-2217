@@ -39,7 +39,7 @@ func (s SampleStatus) AllowsBatchAssignment() bool {
 }
 
 func (s SampleStatus) AllowsCompletion() bool {
-	return s == SampleRegistered || s == SampleInReview
+	return s == SampleRegistered
 }
 
 func (s SampleStatus) Valid() bool {
