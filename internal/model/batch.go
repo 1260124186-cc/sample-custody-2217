@@ -19,8 +19,15 @@ type Batch struct {
 	CompletedAt *time.Time  `json:"completed_at,omitempty"`
 }
 
+// Clone 深拷贝 SampleIDs 切片，避免与外部共享底层数组导致历史数据被污染。
 func (b Batch) Clone() Batch {
-	return b
+	clone := b
+	if b.SampleIDs != nil {
+		ids := make([]string, len(b.SampleIDs))
+		copy(ids, b.SampleIDs)
+		clone.SampleIDs = ids
+	}
+	return clone
 }
 
 func (b Batch) IsOpen() bool {

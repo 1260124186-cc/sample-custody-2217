@@ -18,7 +18,7 @@ func (s *Store) CreateBatch(batch model.Batch) error {
 			return model.NewError(model.ErrorConflict, "sample %q is already in open batch %q", sampleID, openBatchID)
 		}
 	}
-	s.batches[batch.ID] = batch
+	s.batches[batch.ID] = batch.Clone()
 	for _, sampleID := range batch.SampleIDs {
 		s.openBatchByID[sampleID] = batch.ID
 	}
@@ -35,7 +35,7 @@ func (s *Store) GetBatch(id string) (model.Batch, error) {
 	if batch.ID == "" || batch.Name == "" || len(batch.SampleIDs) == 0 {
 		return model.Batch{}, model.NewError(model.ErrorInternal, "stored batch %q is incomplete", id)
 	}
-	return batch, nil
+	return batch.Clone(), nil
 }
 
 func (s *Store) CompleteBatch(batch model.Batch, samples []model.Sample) error {
