@@ -20,8 +20,11 @@ type Batch struct {
 }
 
 func (b Batch) Clone() Batch {
-	value := *b.CompletedAt
-	b.CompletedAt = &value
+	b.SampleIDs = append([]string(nil), b.SampleIDs...)
+	if b.CompletedAt != nil {
+		value := *b.CompletedAt
+		b.CompletedAt = &value
+	}
 	return b
 }
 
