@@ -47,7 +47,8 @@ func (s *SampleService) Register(input model.RegisterSampleInput) (model.Sample,
 		UpdatedAt:     now,
 	}
 	if err := s.store.CreateSample(sample); err != nil {
-		return model.Sample{}, fmt.Errorf("create sample failed: %v", err)
+		// 使用 %w 包装以保留 store 层 DomainError 的 Kind，让 HTTP 层能映射为正确的状态码
+		return model.Sample{}, fmt.Errorf("create sample failed: %w", err)
 	}
 	s.log.Append(model.AuditEvent{
 		ID:        s.ids.Next("event"),

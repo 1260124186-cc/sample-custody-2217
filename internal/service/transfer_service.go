@@ -57,7 +57,8 @@ func (s *TransferService) Transfer(sampleID string, input model.TransferInput) (
 	sample.CurrentHolder = normalized.To
 	sample.UpdatedAt = now
 	if err := s.store.UpdateSampleAndAppendTransfer(sample, transfer); err != nil {
-		return model.Transfer{}, model.Sample{}, fmt.Errorf("save transfer failed: %v", err)
+		// 使用 %w 包装以保留 store 层 DomainError 的 Kind
+		return model.Transfer{}, model.Sample{}, fmt.Errorf("save transfer failed: %w", err)
 	}
 	s.log.Append(model.AuditEvent{
 		ID:        s.ids.Next("event"),

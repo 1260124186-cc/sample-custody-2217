@@ -53,7 +53,8 @@ func (s *BatchService) Create(input model.CreateBatchInput) (model.Batch, error)
 		CreatedAt: now,
 	}
 	if err := s.store.CreateBatch(batch); err != nil {
-		return model.Batch{}, fmt.Errorf("create batch failed: %v", err)
+		// 使用 %w 包装以保留 store 层 DomainError 的 Kind
+		return model.Batch{}, fmt.Errorf("create batch failed: %w", err)
 	}
 	for _, sample := range samples {
 		nextStatus := policy.TransitionForBatch(sample)
@@ -63,7 +64,8 @@ func (s *BatchService) Create(input model.CreateBatchInput) (model.Batch, error)
 		sample.Status = nextStatus
 		sample.UpdatedAt = now
 		if err := s.store.UpdateSample(sample); err != nil {
-			return model.Batch{}, fmt.Errorf("update sample failed: %v", err)
+			// 使用 %w 包装以保留 store 层 DomainError 的 Kind
+			return model.Batch{}, fmt.Errorf("update sample failed: %w", err)
 		}
 		s.log.Append(model.AuditEvent{
 			ID:        s.ids.Next("event"),
@@ -119,7 +121,8 @@ func (s *BatchService) Complete(id string) (model.BatchCompletion, error) {
 	batch.Status = model.BatchCompleted
 	batch.CompletedAt = &now
 	if err := s.store.CompleteBatch(batch, samples); err != nil {
-		return model.BatchCompletion{}, fmt.Errorf("complete batch failed: %v", err)
+		// 使用 %w 包装以保留 store 层 DomainError 的 Kind
+		return model.BatchCompletion{}, fmt.Errorf("complete batch failed: %w", err)
 	}
 	for _, sample := range samples {
 		s.log.Append(model.AuditEvent{

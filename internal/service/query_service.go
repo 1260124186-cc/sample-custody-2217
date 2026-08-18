@@ -24,7 +24,8 @@ type SampleDetail struct {
 func (s *QueryService) Detail(id string) (SampleDetail, error) {
 	sample, err := s.store.GetSample(id)
 	if err != nil {
-		return SampleDetail{}, fmt.Errorf("get sample detail failed: %v", err)
+		// 使用 %w 包装以保留 store 层 DomainError 的 Kind，让 404 不被误判为 500
+		return SampleDetail{}, fmt.Errorf("get sample detail failed: %w", err)
 	}
 	return SampleDetail{
 		Sample:    sample,

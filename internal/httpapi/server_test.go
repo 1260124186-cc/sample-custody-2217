@@ -39,6 +39,24 @@ func TestHTTPHealth(t *testing.T) {
 	}
 }
 
+// TestHTTPDuplicateSampleIsConflict 验证重复登记同一个样本编码时被识别为明确的冲突（409），
+// 而非系统失败（500），以便客户端能据此判断无需重试。
+func TestHTTPDuplicateSampleIsConflict(t *testing.T) {
+	handler := app.New().Handler
+	body := `{"id":"dup-sample-001","code":"DUP-001","material":"serum","origin":"test-lab","quantity":1,"unit":"ml"}`
+	first := postJSON(t, handler, "/samples", body)
+	if first.StatusCode != http.StatusCreated {
+		t.Fatalf("first register status: %d", first.StatusCode)
+	}
+	duplicate := postJSON(t, handler, "/samples", `{"id":"dup-sample-002","code":"DUP-001","material":"serum","origin":"test-lab","quantity":1,"unit":"ml"}`)
+	if duplicate.StatusCode != http.StatusConflict {
+		t.Fatalf("duplicate register status = %d, want %d (body: %s)", duplicate.StatusCode, http.StatusConflict, duplicate.Body)
+	}
+	if !strings.Contains(duplicate.Body, `"error":"conflict"`) {
+		t.Fatalf("duplicate register body missing conflict kind: %s", duplicate.Body)
+	}
+}
+
 type jsonResponse struct {
 	StatusCode int
 	Body       string
