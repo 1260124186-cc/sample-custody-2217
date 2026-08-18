@@ -53,7 +53,7 @@ func (s *Store) CompleteBatch(batch model.Batch, samples []model.Sample) error {
 		if !found {
 			return model.NewError(model.ErrorNotFound, "sample %q was not found", sample.ID)
 		}
-		if current.Status != model.SampleRegistered {
+		if current.Status == model.SampleSealed {
 			return model.NewError(model.ErrorConflict, "sample %q is already sealed", sample.ID)
 		}
 	}

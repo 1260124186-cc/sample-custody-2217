@@ -108,9 +108,6 @@ func (s *BatchService) Complete(id string) (model.BatchCompletion, error) {
 	}
 	now := s.clock.Now()
 	for index := range samples {
-		if samples[index].Status != model.SampleRegistered {
-			return model.BatchCompletion{}, model.NewError(model.ErrorConflict, "sample %q is not ready to seal", samples[index].ID)
-		}
 		if !policy.CanSeal(samples[index]) {
 			return model.BatchCompletion{}, model.NewError(model.ErrorConflict, "sample %q cannot be sealed", samples[index].ID)
 		}
