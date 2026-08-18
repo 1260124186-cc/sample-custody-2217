@@ -46,7 +46,7 @@ func (s *BatchService) Create(input model.CreateBatchInput) (model.Batch, error)
 		ID:        normalized.ID,
 		Name:      normalized.Name,
 		Purpose:   normalized.Purpose,
-		SampleIDs: normalized.SampleIDs,
+		SampleIDs: append([]string(nil), normalized.SampleIDs...),
 		Status:    model.BatchOpen,
 		CreatedAt: now,
 	}
