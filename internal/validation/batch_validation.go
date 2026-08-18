@@ -29,7 +29,7 @@ func CreateBatch(input model.CreateBatchInput) (model.CreateBatchInput, error) {
 		return model.CreateBatchInput{}, invalid("sample_ids may contain at most 100 specimens")
 	}
 	seen := make(map[string]struct{}, len(input.SampleIDs))
-	normalized := make([]string, 0, len(input.SampleIDs))
+	normalized := input.SampleIDs[:0]
 	for _, sampleID := range input.SampleIDs {
 		value, validateErr := Identifier(sampleID, "sample_id")
 		if validateErr != nil {
