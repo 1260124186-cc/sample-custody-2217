@@ -18,7 +18,7 @@ func (s *Server) searchSamples(writer http.ResponseWriter, request *http.Request
 		writeError(writer, err)
 		return
 	}
-	results := s.services.Queries.Search(query.Text, query.Limit)
+	results := s.services.Queries.Search("", query.Limit)
 	writeJSON(writer, http.StatusOK, map[string]any{
 		"query":   query.Text,
 		"results": results,

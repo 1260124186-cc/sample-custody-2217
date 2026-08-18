@@ -48,7 +48,7 @@ func (s *QueryService) Summary() model.ServiceSummary {
 }
 
 func (s *QueryService) Search(query string, limit int) []model.SearchResult {
-	return search.Samples(s.store.ListSamples(model.SampleFilter{}), query, limit)
+	return search.Samples(s.store.ListSamples(model.SampleFilter{Status: model.SampleRegistered}), query, limit)
 }
 
 func (s *QueryService) SampleExport(filter model.SampleFilter) string {
