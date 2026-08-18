@@ -24,3 +24,12 @@ type TransferInput struct {
 	Operator string `json:"operator"`
 	Note     string `json:"note"`
 }
+
+type TransferGuard struct {
+	SampleID       string
+	ExpectedHolder string
+}
+
+func (g TransferGuard) Valid() bool {
+	return g.SampleID != "" && g.ExpectedHolder != ""
+}

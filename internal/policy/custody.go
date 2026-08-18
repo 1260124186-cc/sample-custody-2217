@@ -23,6 +23,13 @@ func CanTransfer(sample model.Sample, from, to string) (bool, string) {
 	return true, ""
 }
 
+func BuildTransferGuard(sample model.Sample) model.TransferGuard {
+	return model.TransferGuard{
+		SampleID:       sample.ID,
+		ExpectedHolder: sample.CurrentHolder,
+	}
+}
+
 func TransitionForBatch(sample model.Sample) model.SampleStatus {
 	if sample.Status == model.SampleRegistered {
 		if sample.Status.CanTransitionTo(model.SampleInReview) {

@@ -42,6 +42,7 @@ func (s *TransferService) Transfer(sampleID string, input model.TransferInput) (
 		)
 	}
 	now := s.clock.Now()
+	guard := policy.BuildTransferGuard(sample)
 	transfer := model.Transfer{
 		ID:        s.ids.Next("transfer"),
 		SampleID:  sample.ID,
@@ -54,7 +55,7 @@ func (s *TransferService) Transfer(sampleID string, input model.TransferInput) (
 	}
 	sample.CurrentHolder = normalized.To
 	sample.UpdatedAt = now
-	if err := s.store.UpdateSampleAndAppendTransfer(sample, transfer); err != nil {
+	if err := s.store.UpdateSampleAndAppendTransferGuarded(sample, transfer, guard); err != nil {
 		return model.Transfer{}, model.Sample{}, err
 	}
 	s.log.Append(model.AuditEvent{

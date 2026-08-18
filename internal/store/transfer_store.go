@@ -23,3 +23,10 @@ func (s *Store) UpdateSampleAndAppendTransfer(sample model.Sample, transfer mode
 	s.transfers[sample.ID] = append(s.transfers[sample.ID], transfer.Clone())
 	return nil
 }
+
+func (s *Store) UpdateSampleAndAppendTransferGuarded(sample model.Sample, transfer model.Transfer, guard model.TransferGuard) error {
+	if !guard.Valid() {
+		return model.NewError(model.ErrorInvalid, "transfer guard is incomplete")
+	}
+	return s.UpdateSampleAndAppendTransfer(sample, transfer)
+}
