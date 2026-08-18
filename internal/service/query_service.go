@@ -26,8 +26,8 @@ func (s *QueryService) Detail(id string) (SampleDetail, error) {
 	}
 	return SampleDetail{
 		Sample:    sample,
-		Transfers: s.store.TransfersForSample(id),
-		Events:    s.log.LatestForEntity(id, 50),
+		Transfers: append([]model.Transfer(nil), s.store.TransfersForSample(id)...),
+		Events:    append([]model.AuditEvent(nil), s.log.LatestForEntity(id, 50)...),
 	}, nil
 }
 

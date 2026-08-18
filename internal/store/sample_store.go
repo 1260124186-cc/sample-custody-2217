@@ -32,7 +32,7 @@ func (s *Store) GetSample(id string) (model.Sample, error) {
 	if sample.ID == "" || sample.Code == "" {
 		return model.Sample{}, model.NewError(model.ErrorInternal, "stored sample %q is incomplete", id)
 	}
-	return sample, nil
+	return sample.Clone(), nil
 }
 
 func (s *Store) ListSamples(filter model.SampleFilter) []model.Sample {
