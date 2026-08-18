@@ -13,7 +13,8 @@ func (s *Store) CreateSample(sample model.Sample) error {
 	if _, exists := s.samples[sample.ID]; exists {
 		return model.NewError(model.ErrorConflict, "sample id %q already exists", sample.ID)
 	}
-	codeKey := sample.Code
+	// 编码唯一性按大小写不敏感判定，避免仅大小写不同的编码同时入库
+	codeKey := strings.ToLower(sample.Code)
 	if _, exists := s.sampleByCode[codeKey]; exists {
 		return model.NewError(model.ErrorConflict, "sample code %q already exists", sample.Code)
 	}

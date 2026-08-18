@@ -133,7 +133,8 @@ func ForBatch(samples []model.Sample) Checklist {
 				SampleID: sample.ID,
 			})
 		}
-		code := strings.TrimSpace(sample.Code)
+		// 编码去重大小写不敏感，仅大小写不同的编码视为同一编码
+		code := strings.ToLower(strings.TrimSpace(sample.Code))
 		if previous, exists := seenCodes[code]; exists {
 			findings = append(findings, Finding{
 				Code:     "duplicate-code",
