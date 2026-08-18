@@ -1,0 +1,50 @@
+{
+  "shape": "backend",
+  "service": {
+    "command": "go run ./cmd/server",
+    "startup_timeout_seconds": 20,
+    "health": {
+      "url": "http://127.0.0.1:8090/healthz",
+      "method": "GET",
+      "status": 200,
+      "contains": "ok",
+      "timeout_seconds": 5
+    },
+    "api": {
+      "url": "http://127.0.0.1:8090/samples",
+      "method": "GET",
+      "status": 200,
+      "contains": "samples",
+      "timeout_seconds": 5
+    }
+  },
+  "workflow_checks": [
+    {
+      "workflow_id": "register-specimen",
+      "url": "http://127.0.0.1:8090/samples",
+      "method": "POST",
+      "status": 201,
+      "body": "{\"id\":\"audit-sample-001\",\"code\":\"AUDIT-001\",\"material\":\"serum\",\"origin\":\"audit-lab\",\"quantity\":2,\"unit\":\"ml\"}",
+      "contains": "registered",
+      "timeout_seconds": 5
+    },
+    {
+      "workflow_id": "transfer-custody",
+      "url": "http://127.0.0.1:8090/samples/audit-sample-001/transfers",
+      "method": "POST",
+      "status": 201,
+      "body": "{\"from\":\"intake\",\"to\":\"review\",\"location\":\"cold-room\",\"operator\":\"audit-user\",\"note\":\"routine handoff\"}",
+      "contains": "review",
+      "timeout_seconds": 5
+    },
+    {
+      "workflow_id": "complete-inspection-batch",
+      "url": "http://127.0.0.1:8090/batches",
+      "method": "POST",
+      "status": 201,
+      "body": "{\"id\":\"audit-batch-001\",\"name\":\"audit batch\",\"purpose\":\"workflow check\",\"sample_ids\":[\"audit-sample-001\"]}",
+      "contains": "open",
+      "timeout_seconds": 5
+    }
+  ]
+}

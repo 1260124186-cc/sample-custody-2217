@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "name": "sample-custody",
+  "summary": "An in-memory HTTP service for scientific specimen registration, custody transfer, and inspection batches.",
+  "user_roles": [
+    "intake technician",
+    "custody coordinator",
+    "review scientist"
+  ],
+  "entities": [
+    "specimen",
+    "custody transfer",
+    "inspection batch",
+    "audit event"
+  ],
+  "workflows": [
+    {
+      "id": "register-specimen",
+      "name": "Register a specimen",
+      "actor": "intake technician",
+      "entry": "POST /samples",
+      "steps": [
+        "validate the code, origin, quantity, and unit",
+        "store the specimen and append a registration audit event"
+      ],
+      "success": "returns a registered specimen with an identifier",
+      "failure": "duplicate code or invalid quantity returns a client error",
+      "verification": "POST /samples with a valid payload and inspect the registered response"
+    },
+    {
+      "id": "transfer-custody",
+      "name": "Transfer specimen custody",
+      "actor": "custody coordinator",
+      "entry": "POST /samples/{id}/transfers",
+      "steps": [
+        "check the current holder and specimen lifecycle",
+        "append a transfer and update the current holder"
+      ],
+      "success": "returns the transfer and the new holder",
+      "failure": "stale holder or sealed specimen returns a conflict",
+      "verification": "POST /samples/{id}/transfers and GET the specimen history"
+    },
+    {
+      "id": "complete-inspection-batch",
+      "name": "Create and complete an inspection batch",
+      "actor": "review scientist",
+      "entry": "POST /batches/{id}/complete",
+      "steps": [
+        "validate the selected specimens and create an open batch",
+        "complete the batch and seal every included specimen"
+      ],
+      "success": "returns a completed batch and sealed specimen count",
+      "failure": "unknown, sealed, or already-batched specimens return a client error",
+      "verification": "POST /batches, POST /batches/{id}/complete, and GET the manifest"
+    }
+  ],
+  "module_plan": [
+    {
+      "package": "internal/model",
+      "workflow_ids": [
+        "register-specimen",
+        "transfer-custody",
+        "complete-inspection-batch"
+      ]
+    },
+    {
+      "package": "internal/store",
+      "workflow_ids": [
+        "register-specimen",
+        "transfer-custody",
+        "complete-inspection-batch"
+      ]
+    },
+    {
+      "package": "internal/service",
+      "workflow_ids": [
+        "register-specimen",
+        "transfer-custody",
+        "complete-inspection-batch"
+      ]
+    },
+    {
+      "package": "internal/httpapi",
+      "workflow_ids": [
+        "register-specimen",
+        "transfer-custody",
+        "complete-inspection-batch"
+      ]
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "sample registration HTTP API",
+      "workflow_ids": [
+        "register-specimen"
+      ]
+    },
+    {
+      "name": "custody transfer HTTP API",
+      "workflow_ids": [
+        "transfer-custody"
+      ]
+    },
+    {
+      "name": "inspection batch HTTP API",
+      "workflow_ids": [
+        "complete-inspection-batch"
+      ]
+    }
+  ]
+}
