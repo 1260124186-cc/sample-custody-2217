@@ -87,6 +87,12 @@ func ForRegistration(input model.RegisterSampleInput) Checklist {
 
 func ForTransfer(sample model.Sample, from, to string) Checklist {
 	findings := make([]Finding, 0, 3)
+	if sample.Status == model.SampleInReview {
+		findings = append(findings, Finding{
+			Code: "review-sample-locked", Severity: SeverityBlock,
+			Message: "specimens under review must remain with the intake team", SampleID: sample.ID,
+		})
+	}
 	if !sample.IsTransferable() {
 		findings = append(findings, Finding{
 			Code:     "sealed-sample",

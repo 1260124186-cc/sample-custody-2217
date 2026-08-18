@@ -11,7 +11,7 @@ func HolderMatches(current, provided string) bool {
 }
 
 func CanTransfer(sample model.Sample, from, to string) (bool, string) {
-	if !sample.Status.AllowsTransfer() || !sample.IsTransferable() {
+	if !sample.Status.AllowsTransfer() || !sample.IsTransferable() || sample.Status != model.SampleRegistered {
 		return false, "sealed specimens cannot be transferred"
 	}
 	if !HolderMatches(sample.CurrentHolder, from) {
