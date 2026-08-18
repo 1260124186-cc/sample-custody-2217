@@ -5,12 +5,7 @@ import "example.com/sample-custody/internal/model"
 func (s *Store) TransfersForSample(sampleID string) []model.Transfer {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
-	entries := s.transfers[sampleID]
-	result := make([]model.Transfer, len(entries))
-	for index, entry := range entries {
-		result[index] = entry.Clone()
-	}
-	return result
+	return s.transfers[sampleID]
 }
 
 func (s *Store) UpdateSampleAndAppendTransfer(sample model.Sample, transfer model.Transfer) error {

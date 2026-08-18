@@ -1,4 +1,4 @@
-# sample-custody-2217 Docker 交付说明
+# sample-custody__009 Docker 交付说明
 
 ## 项目概览
 - Sample Custody Service is a local HTTP backend for recording the custody chain of
@@ -20,8 +20,8 @@ go run ./cmd/server
 ## Docker 构建
 
 ```bash
-./build_benzhi_docker.sh sample-custody-2217-benzhi linux/amd64
-docker run --rm -it sample-custody-2217-benzhi bash
+./build_benzhi_docker.sh sample-custody__009-benzhi linux/amd64
+docker run --rm -it sample-custody__009-benzhi bash
 ```
 
 ## 环境

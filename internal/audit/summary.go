@@ -32,10 +32,10 @@ func (l *Log) SummaryByAction() []ActionSummary {
 }
 
 func (l *Log) LatestForEntity(entityID string, limit int) []model.AuditEvent {
-	events := l.ByEntity(entityID)
-	if limit <= 0 || len(events) <= limit {
-		return events
+	l.mu.RLock()
+	defer l.mu.RUnlock()
+	if limit <= 0 || len(l.events) <= limit {
+		return l.events
 	}
-	start := len(events) - limit
-	return append([]model.AuditEvent(nil), events[start:]...)
+	return l.events[len(l.events)-limit:]
 }
