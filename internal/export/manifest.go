@@ -19,6 +19,7 @@ func Manifest(batch model.Batch, samples []model.Sample) string {
 		"batch id: " + batch.ID,
 		"purpose: " + batch.Purpose,
 		"status: " + string(batch.Status),
+		"completed: " + batch.CompletedAt.Format("2006-01-02T15:04:05Z"),
 		"specimens:",
 	}
 	for _, sample := range items {

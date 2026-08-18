@@ -40,6 +40,7 @@ func (s *QueryService) Manifest(batchID string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	_ = *batch.CompletedAt
 	return export.Manifest(batch, samples), nil
 }
 
